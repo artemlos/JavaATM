@@ -16,9 +16,7 @@ public class ATMClient {
     	if (connectionPort == -1)
     		return;
     	
-        Socket ATMSocket = null;
-        PrintWriter out = null;
-        BufferedReader in = null;
+       
         String adress = "";
 
         try {
@@ -27,54 +25,17 @@ public class ATMClient {
             System.err.println("Missing argument ip-adress");
             System.exit(1);
         }
-        try {
-            ATMSocket = new Socket(adress, connectionPort); 
-            out = new PrintWriter(ATMSocket.getOutputStream(), true);
-            in = new BufferedReader(new InputStreamReader
-                                    (ATMSocket.getInputStream()));
-        } catch (UnknownHostException e) {
-            System.err.println("Unknown host: " +adress);
-            System.exit(1);
-        } catch (IOException e) {
-            System.err.println("Couldn't open connection to " + adress);
-            System.exit(1);
-        }
-
-        System.out.println("Contacting bank ... ");
-        System.out.println(in.readLine()); 
-
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("> ");
-        int menuOption = scanner.nextInt();
-        int userInput;
-        out.println(menuOption);
-        while(menuOption < 4) {
-                if(menuOption == 1) {
-                        System.out.println(in.readLine()); 
-                        System.out.println(in.readLine());
-                        System.out.print("> ");
-                        menuOption = scanner.nextInt();
-                        out.println(menuOption);           
-                } else if (menuOption > 3) {
-                    break;
-                }	
-                else {
-                    System.out.println(in.readLine()); 
-                    userInput = scanner.nextInt();
-                    out.println(userInput);
-                    String str;
-                    do {
-                        str = in.readLine();
-                        System.out.println(str);
-                    } while (! str.startsWith("(1)"));
-                    System.out.print("> ");
-                    menuOption = scanner.nextInt();
-                    out.println(menuOption);           
-                }	
-        }		
-		
-        out.close();
-        in.close();
-        ATMSocket.close();
+        
+        ClientInterface ci = new ClientInterface(adress, connectionPort);
+      
+        // ask user about the language.
+        // send that to the server and get the appropriate language data.
+        // save data in a file using SaveBytesToFile. load it later unless language changes
+        // or its version number.
+        // take user input.
+        // etc.
+        
     }
+    
+    
 }   

@@ -1,5 +1,7 @@
 package ATM;
 
+import java.io.FileOutputStream;
+
 /**
  * Some helper methods.
  * @author Artem Los
@@ -19,5 +21,30 @@ public class HelperMethods {
     	}
     	
     	return -1;
+	}
+	
+	public static boolean SaveBytesToFile(String filename, byte[] array) {
+		boolean state = false;
+		FileOutputStream fos = null;
+		
+		try {
+
+			fos = new FileOutputStream(filename);
+			fos.write(array);
+			state = true;
+			
+		} catch (Exception e) {
+			
+		}
+		finally{
+			try {
+				fos.close();
+			} catch (Exception e) {
+				
+			}
+		}
+		
+		return state;
+		
 	}
 }

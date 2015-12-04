@@ -17,7 +17,16 @@ import java.util.HashMap;
 public class LanguageObject implements Serializable{
 
 	public enum LanguageType {
-		English, Swedish, Russian, German 
+		English(1), Swedish(2), Russian(3), German(4)
+		
+		private final int value;
+		LanguageType(int value) {
+			this.value = value;
+		}
+		
+		public int getValue() {
+			return this.value;
+		}
 	}
 	
 	LanguageType language;
