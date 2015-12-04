@@ -1,8 +1,10 @@
+package ATM;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.HashMap;
 
 /**
@@ -12,7 +14,7 @@ import java.util.HashMap;
  * @author Artem Los
  * 
  */
-public class LanguageObject {
+public class LanguageObject implements Serializable{
 
 	public enum LanguageType {
 		English, Swedish, Russian, German 
@@ -40,6 +42,7 @@ public class LanguageObject {
 	public LanguageObject (LanguageType language, int version) {
 		this.language = language;
 		this.version = version;
+		this.statements = new HashMap<>();
 	}
 	
 	/**
@@ -73,6 +76,10 @@ public class LanguageObject {
 		this.language = obj.language;
 		this.version = obj.version;
 		this.statements = obj.statements;
+		
+		if (statements == null) {
+			this.statements = new HashMap<>();
+		}
 	}
 	
 	
@@ -82,8 +89,19 @@ public class LanguageObject {
 	 * @param name A short description of the statement
 	 * @param statement The sentence associated with that description.
 	 */
-	public void AddStatement(String  name, String statement) {
+	public void AddStatement(String name, String statement) {
 		statements.put(name, statement);
+	}
+	
+	/**
+	 * Gets a statement given the short description.
+	 * name = "welcome" returns "Welcome to the Bank".
+	 * @param name A short description of the statement
+	 */
+	public String GetStatement(String name) {
+		if (statements.containsKey(name))
+			return statements.get(name);
+		return null;
 	}
 	
 	/**
@@ -101,7 +119,7 @@ public class LanguageObject {
 			array = out.toByteArray();
 		}
 		catch (Exception e)
-		{}
+		{System.out.println(e);}
 		finally
 		{
 			try {
