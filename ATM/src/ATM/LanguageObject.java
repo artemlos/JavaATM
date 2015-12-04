@@ -105,7 +105,7 @@ public class LanguageObject implements Serializable{
 	}
 	
 	/**
-	 * Converts a Language object to a byte array.
+	 * Converts a Language object into a byte array.
 	 * @return A byte array reprensenting the object or null (in case of error)
 	 */
 	public byte[] Serialize() {
