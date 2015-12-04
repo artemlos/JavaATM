@@ -1,6 +1,9 @@
 package ATM;
 
 import java.net.*;
+
+import ATM.LanguageObject.LanguageType;
+
 import java.io.*;
 
 /**
@@ -15,6 +18,11 @@ public class ATMServer {
     	connectionPort = HelperMethods.GetPortFromArgs(args, 0);
     	if (connectionPort == -1)
     		return;
+    	
+    	LanguageObject english = new LanguageObject(LanguageType.English, 1);
+    	
+    	english.AddStatement("welcome", "Welcome to the Bank!");
+    	english.AddStatement("banner", "Get 50% discount on business tools.");
     	
         ServerSocket serverSocket = null;
        
