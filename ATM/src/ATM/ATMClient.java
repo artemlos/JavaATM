@@ -15,7 +15,7 @@ public class ATMClient {
 		LanguageObject lo = null;
 		
 		while (true) {
-			if (lo == null) {
+			if (lo == null) {  // If the language hasn't already been chosen.
 				System.out.println(ci.getString());
 				ci.writeData(scan.nextLine().getBytes());
 				lo = new LanguageObject(ci.readData());
@@ -23,8 +23,8 @@ public class ATMClient {
 				ci.writeData(scan.nextLine().getBytes());
 			} else {
 				// This part is the user interface after the language has been chosen.
-				System.out.println(lo.GetStatement(ci.getString()));
-				ci.writeData(scan.nextLine().getBytes());
+				System.out.println(lo.GetStatement(ci.getString())); // Read from server and print out on screen.
+				ci.writeData(scan.nextLine().getBytes()); // Read input from user and send the result to the server.
 			}
 		}
 	}
