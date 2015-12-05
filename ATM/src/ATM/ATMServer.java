@@ -77,9 +77,9 @@ public class ATMServer {
 			ArrayList<Byte> bl = new ArrayList<Byte>();
 			byte[] init = read(2);
 			int i = 0;
-			i |= init[1];
+			i |= init[1] & 0xff;
 			i <<= 8;
-			i |= init[0];
+			i |= init[0] & 0xff;
 			
 			for (int z = 0; z < i/10; z++) {
 				byte[] buff = read(10);
@@ -104,8 +104,20 @@ public class ATMServer {
 			return null;
 		}
 		
+		/**
+		 * Sends a message to the client.
+		 * @param key description of a statement in a language object.
+		 * @param val Some other string. Could for example be a number stored in the server.
+		 * @param menu description of some menu.
+		 */
+		public void sendmsg(String key, String val, String menu) {
+			writeData(key.getBytes());
+			writeData(val.getBytes());
+			writeData(menu.getBytes());
+		}
+		
 	    public void run() {
-	    	String read = null;
+	    	//String read = null;
 	    	LanguageObject lo = null;
 	        while (true) {
 	        	if (lo == null) {
@@ -113,21 +125,27 @@ public class ATMServer {
 	        		int l = Integer.parseInt(getString());
 	        		if (l == 1) {
 	        			lo = new LanguageObject(LanguageType.English, 1);
-	        			lo.AddStatement("welcome", "Welcome to shitty bank. Choose an alternative: (1) Show money (2) Log out ");
-	        			lo.AddStatement("money", "Haha you have no money. Choose an alternative: (1) Show money (2) Log out ");
-	        			lo.AddStatement("logout", "Haha you can't log out. Choose an alternative: (1) Show money (2) Log out ");
-	        			lo.AddStatement("invalid", "Invalid input. Choose an alternative: (1) Show money (2) Log out ");
+	        			lo.AddStatement("welcome", "Welcome to shitty bank.");
+	        			lo.AddStatement("money", "You have");
+	        			lo.AddStatement("logout", "Haha you can't log out.");
+	        			lo.AddStatement("invalid", "Invalid input.");
+	        			lo.AddStatement("menu", "Choose an alternative: (1) Show money (2) Log out");
+	        			lo.AddStatement("empty", "");
 	        			writeData(lo.Serialize());
+	        			sendmsg("welcome", "", "menu");
 	        			
 	        			// The messages should obviously be modified later.
 	        			
 	        		} else if (l == 2) {
 	        			lo = new LanguageObject(LanguageType.Swedish, 1);
-	        			lo.AddStatement("welcome", "Välkommen till shitty bank. Välj ett alternativ: (1) Visa kredit (2) Logga ut ");
-	        			lo.AddStatement("money", "Haha du har inga pengar. Välj ett alternativ: (1) Visa kredit (2) Logga ut ");
-	        			lo.AddStatement("logout", "Haha du kan inte logga ut. Välj ett alternativ: (1) Visa kredit (2) Logga ut ");
-	        			lo.AddStatement("invalid", "Ogilitig input. Välj ett alternativ: (1) Visa kredit (2) Logga ut ");
+	        			lo.AddStatement("welcome", "Välkommen till shitty bank.");
+	        			lo.AddStatement("money", "Du har");
+	        			lo.AddStatement("logout", "Haha du kan inte logga ut.");
+	        			lo.AddStatement("invalid", "Ogiltig input.");
+	        			lo.AddStatement("menu", "Välj ett altenativ: (1) Visa kredit (2) Logga ut");
+	        			lo.AddStatement("empty", "");
 	        			writeData(lo.Serialize());
+	        			sendmsg("welcome", "", "menu");
 	        		}
 	        	} else  {
 	        		// This part is the user interface after the language has been chosen.
@@ -135,11 +153,11 @@ public class ATMServer {
 	        		
 	        		// Respond accordingly. This should also be modified later.
 	        		if (l == 1) {
-	        			writeData("money".getBytes());
+	        			sendmsg("money", "55", "menu");
 	        		} else if (l == 2) {
-	        			writeData("logout".getBytes());
+	        			sendmsg("logout", "", "menu");
 	        		} else {
-	        			writeData("invalid".getBytes());
+	        			sendmsg("invalid", "", "menu");
 	        		}
 	        	}
 	        }
