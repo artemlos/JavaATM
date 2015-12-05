@@ -15,6 +15,9 @@ import ATM.LanguageObject.LanguageType;
 
 public class ATMServer {
 	
+	/**
+	 * Several Client objects run parallelly, one for each client connected to the server.
+	 **/
 	private static class Client implements Runnable {
 		
 		OutputStream out; 
@@ -106,7 +109,7 @@ public class ATMServer {
 	    	LanguageObject lo = null;
 	        while (true) {
 	        	if (lo == null) {
-	        		writeData("Choose language: (1) English (2) Swedish ".getBytes());
+	        		writeData("Choose language: (1) English (2) Swedish ".getBytes()); // Ask the user to choose a language.
 	        		int l = Integer.parseInt(getString());
 	        		if (l == 1) {
 	        			lo = new LanguageObject(LanguageType.English, 1);
@@ -115,6 +118,9 @@ public class ATMServer {
 	        			lo.AddStatement("logout", "Haha you can't log out. Choose an alternative: (1) Show money (2) Log out ");
 	        			lo.AddStatement("invalid", "Invalid input. Choose an alternative: (1) Show money (2) Log out ");
 	        			writeData(lo.Serialize());
+	        			
+	        			// The messages should obviously be modified later.
+	        			
 	        		} else if (l == 2) {
 	        			lo = new LanguageObject(LanguageType.Swedish, 1);
 	        			lo.AddStatement("welcome", "Välkommen till shitty bank. Välj ett alternativ: (1) Visa kredit (2) Logga ut ");
@@ -125,7 +131,9 @@ public class ATMServer {
 	        		}
 	        	} else  {
 	        		// This part is the user interface after the language has been chosen.
-	        		int l = Integer.parseInt(getString());
+	        		int l = Integer.parseInt(getString()); // Get input from client.
+	        		
+	        		// Respond accordingly. This should also be modified later.
 	        		if (l == 1) {
 	        			writeData("money".getBytes());
 	        		} else if (l == 2) {
