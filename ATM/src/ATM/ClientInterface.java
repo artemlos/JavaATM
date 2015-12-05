@@ -16,6 +16,8 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import ATM.LanguageObject;
+
 
 public class ClientInterace {
 	Socket socket;
@@ -94,9 +96,9 @@ public class ClientInterace {
 		ArrayList<Byte> bl = new ArrayList<Byte>();
 		byte[] init = read(2);
 		int i = 0;
-		i |= init[1];
+		i |= init[1] & 0xff;
 		i <<= 8;
-		i |= init[0];
+		i |= init[0] & 0xff;
 		
 		for (int z = 0; z < i/10; z++) {
 			byte[] buff = read(10);
@@ -119,6 +121,13 @@ public class ClientInterace {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	public void showmsg(LanguageObject lo) {
+		String key = getString();
+		String val = getString();
+		String menu = getString();
+		System.out.println(lo.GetStatement(key) + " " + val + " " + lo.GetStatement(menu));
 	}
 	
 	/**
