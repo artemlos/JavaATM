@@ -1,41 +1,32 @@
 package ATM;
 
-import java.io.*;   
-import java.net.*;  
 import java.util.Scanner;
+import ATM.LanguageObject;
 
-/**
-   @author Snilledata
-*/
+
 public class ATMClient {
-    private static int connectionPort = 8989;
-    
-    public static void main(String[] args) throws IOException {
-        
-       	connectionPort = HelperMethods.GetPortFromArgs(args, 1);
-    	if (connectionPort == -1)
-    		return;
-    	
-       
-        String adress = "";
 
-        try {
-            adress = args[0];
-        } catch (ArrayIndexOutOfBoundsException e) {
-            System.err.println("Missing argument ip-adress");
-            System.exit(1);
-        }
-        
-        ClientInterface ci = new ClientInterface(adress, connectionPort);
-      
-        // ask user about the language.
-        // send that to the server and get the appropriate language data.
-        // save data in a file using SaveBytesToFile. load it later unless language changes
-        // or its version number.
-        // take user input.
-        // etc.
-        
-    }
-    
-    
-}   
+	public static void main(String[] args) {
+		String hostName = args[0];
+		int portNumber = Integer.parseInt(args[1]);
+		Scanner scan = new Scanner(System.in);
+		
+		ClientInterace ci = new ClientInterace(hostName, portNumber);
+		LanguageObject lo = null;
+		
+		while (true) {
+			if (lo == null) {
+				System.out.println(ci.getString());
+				ci.writeData(scan.nextLine().getBytes());
+				lo = new LanguageObject(ci.readData());
+				System.out.println(lo.GetStatement("welcome"));
+				ci.writeData(scan.nextLine().getBytes());
+			} else {
+				// This part is the user interface after the language has been chosen.
+				System.out.println(lo.GetStatement(ci.getString()));
+				ci.writeData(scan.nextLine().getBytes());
+			}
+		}
+	}
+
+}
