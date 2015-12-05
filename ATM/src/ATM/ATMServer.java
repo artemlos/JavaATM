@@ -113,12 +113,14 @@ public class ATMServer {
 	        			lo.AddStatement("welcome", "Welcome to shitty bank. Choose an alternative: (1) Show money (2) Log out ");
 	        			lo.AddStatement("money", "Haha you have no money. Choose an alternative: (1) Show money (2) Log out ");
 	        			lo.AddStatement("logout", "Haha you can't log out. Choose an alternative: (1) Show money (2) Log out ");
+	        			lo.AddStatement("invalid", "Invalid input. Choose an alternative: (1) Show money (2) Log out ");
 	        			writeData(lo.Serialize());
 	        		} else if (l == 2) {
 	        			lo = new LanguageObject(LanguageType.Swedish, 1);
 	        			lo.AddStatement("welcome", "Välkommen till shitty bank. Välj ett alternativ: (1) Visa kredit (2) Logga ut ");
 	        			lo.AddStatement("money", "Haha du har inga pengar. Välj ett alternativ: (1) Visa kredit (2) Logga ut ");
 	        			lo.AddStatement("logout", "Haha du kan inte logga ut. Välj ett alternativ: (1) Visa kredit (2) Logga ut ");
+	        			lo.AddStatement("invalid", "Ogilitig input. Välj ett alternativ: (1) Visa kredit (2) Logga ut ");
 	        			writeData(lo.Serialize());
 	        		}
 	        	} else  {
@@ -128,6 +130,8 @@ public class ATMServer {
 	        			writeData("money".getBytes());
 	        		} else if (l == 2) {
 	        			writeData("logout".getBytes());
+	        		} else {
+	        			writeData("invalid".getBytes());
 	        		}
 	        	}
 	        }
