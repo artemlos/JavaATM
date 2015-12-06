@@ -19,7 +19,7 @@ import java.util.Arrays;
 import ATM.LanguageObject;
 
 
-public class ClientInterace {
+public class ClientInterface {
 	Socket socket;
 	OutputStream out;
 	InputStream in;
@@ -29,7 +29,7 @@ public class ClientInterace {
 	 * @param hostname Host name of the server.
 	 * @param portnumber Port number of the server.
 	 */
-	public ClientInterace(String hostname, int portnumber) {
+	public ClientInterface(String hostname, int portnumber) {
 		try {
 			socket = new Socket(hostname, portnumber);
 			this.out = socket.getOutputStream();

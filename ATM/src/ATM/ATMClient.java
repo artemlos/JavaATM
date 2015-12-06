@@ -11,7 +11,7 @@ public class ATMClient {
 		int portNumber = Integer.parseInt(args[1]);
 		Scanner scan = new Scanner(System.in);
 		
-		ClientInterace ci = new ClientInterace(hostName, portNumber);
+		ClientInterface ci = new ClientInterface(hostName, portNumber);
 		LanguageObject lo = null;
 		
 		while (true) {
