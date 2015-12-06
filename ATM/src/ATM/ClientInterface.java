@@ -123,11 +123,26 @@ public class ClientInterface {
 		return null;
 	}
 	
-	public void showmsg(LanguageObject lo) {
+	public boolean showmsg(LanguageObject lo) {
 		String key = getString();
+		
+		if (key.equals("terminate")) {
+			return false;
+		}
+		
 		String val = getString();
 		String menu = getString();
-		System.out.println(lo.GetStatement(key) + " " + val + " " + lo.GetStatement(menu));
+		
+		if (menu.equals("terminate")) {
+			return false;
+		}
+		
+		if (lo.GetStatement(menu) == null) {
+			System.out.println(menu);
+		} else {
+			System.out.println(lo.GetStatement(key) + " " + val + " " + lo.GetStatement(menu));	
+		}
+		return true;
 	}
 	
 	/**

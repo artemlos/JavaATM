@@ -26,7 +26,10 @@ public class ATMClient {
 				ci.writeData(scan.nextLine().getBytes());
 			} else {
 				// This part is the user interface after the language has been chosen.
-				ci.showmsg(lo); // Read from server and print out on screen.
+				if(!ci.showmsg(lo)) { // Read from server and print out on screen.
+					ci.close();
+					return; // terminate
+				}
 				ci.writeData(scan.nextLine().getBytes()); // Read input from user and send the result to the server.
 			}
 		}
