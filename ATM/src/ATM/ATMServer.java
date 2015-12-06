@@ -29,13 +29,13 @@ import ATM.LanguageObject.LanguageType;
 
 public class ATMServer {
 	
+	public static int[] balanaces = new int[100];
+	public static List<LinkedList<Integer>> codes;
 	/**
 	 * Several Client objects run parallelly, one for each client connected to the server.
 	 **/
 	private static class Client implements Runnable {
 		
-		int[] balanaces = new int[100];
-		List<LinkedList<Integer>> codes;
 		
 		OutputStream out; 
 		InputStream in;
@@ -51,17 +51,7 @@ public class ATMServer {
 			// initializing one time codes and balances.
 			codes = new ArrayList<>(100);
 			
-			for (int i = 0; i < balanaces.length; i++) {
-				balanaces[i] = 1000; // yeah, $1000! :)
-				
-				/*LinkedList<Integer> code = new LinkedList<>();
-				for (int j = 0; j < balanaces.length; j++) {
-					code.addLast(2*j+1);
-				}*/
-				
-				//codes.add(code);
-				
-			}
+			
 		}
 		
 		public void writeData(byte[] data) {
@@ -269,6 +259,19 @@ public class ATMServer {
 	}
 
 	public static void main(String[] args) {
+		
+		for (int i = 0; i < balanaces.length; i++) {
+			balanaces[i] = 1000; // yeah, $1000! :)
+			
+			/*LinkedList<Integer> code = new LinkedList<>();
+			for (int j = 0; j < balanaces.length; j++) {
+				code.addLast(2*j+1);
+			}*/
+			
+			//codes.add(code);
+			
+		}
+		
 		int portNumber = HelperMethods.GetPortFromArgs(args, 0);
 		ServerSocket serverSocket = null;
 		
