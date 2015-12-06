@@ -8,6 +8,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 import ATM.LanguageObject;
 import ATM.LanguageObject.LanguageType;
@@ -20,6 +22,9 @@ public class ATMServer {
 	 **/
 	private static class Client implements Runnable {
 		
+		int[] balanaces = new int[100];
+		List<LinkedList<Integer>> codes;
+		
 		OutputStream out; 
 		InputStream in;
 		
@@ -29,6 +34,21 @@ public class ATMServer {
 				this.in = clientSocket.getInputStream();
 			} catch (IOException e) {
 				e.printStackTrace();
+			}
+			
+			// initializing one time codes and balances.
+			codes = new ArrayList<>(100);
+			
+			for (int i = 0; i < balanaces.length; i++) {
+				balanaces[i] = 1000; // yeah, $1000! :)
+				
+				LinkedList<Integer> code = new LinkedList<>();
+				for (int j = 0; j < balanaces.length; j++) {
+					code.push(2*j+1);
+				}
+				
+				codes.add(code);
+				
 			}
 		}
 		
@@ -125,50 +145,68 @@ public class ATMServer {
 	        		int l = Integer.parseInt(getString());
 	        		if (l == 1) {
 	        			lo = new LanguageObject(LanguageType.English, 1);
+	        			lo.AddStatement("auth", "Please enter your card number:");
 	        			lo.AddStatement("welcome", "Welcome to shitty bank.");
 	        			lo.AddStatement("money", "You have");
 	        			lo.AddStatement("logout", "Haha you can't log out.");
 	        			lo.AddStatement("invalid", "Invalid input.");
 	        			lo.AddStatement("menu", "Choose an alternative: (1) Show money (2) Log out");
 	        			lo.AddStatement("empty", "");
+	        			lo.AddStatement("auth2", "Please enter the one time phrase:");
+	        			lo.AddStatement("errorcard", "Wrong card number or pass phrase.");
+	        			lo.AddStatement("", "");
 	        			writeData(lo.Serialize());
-	        			sendmsg("welcome", "", "menu");
-	        			
 	        			// The messages should obviously be modified later.
 	        			
 	        		} else if (l == 2) {
 	        			lo = new LanguageObject(LanguageType.Swedish, 1);
+	        			lo.AddStatement("auth", "Vad vänlig och ange ditt kortnummer:");
 	        			lo.AddStatement("welcome", "VÃ¤lkommen till shitty bank.");
 	        			lo.AddStatement("money", "Du har");
 	        			lo.AddStatement("logout", "Haha du kan inte logga ut.");
 	        			lo.AddStatement("invalid", "Ogiltig input.");
 	        			lo.AddStatement("menu", "VÃ¤lj ett altenativ: (1) Visa kredit (2) Logga ut");
 	        			lo.AddStatement("empty", "");
+	        			lo.AddStatement("auth2", "Var vänlig och ange ditt engångslösenord:");
+	        			lo.AddStatement("errorcard", "Fel kortnummer eller lösenord!");
+	        			lo.AddStatement("", "");
 	        			writeData(lo.Serialize());
-	        			sendmsg("welcome", "", "menu");
 	        		}
 	        	} else  {
+	        		sendmsg("auth", "", "");
+	        		int cardno = Integer.parseInt(getString()); // Get input from client.
+	        		sendmsg("auth2", "", "");
+	        		int pass = Integer.parseInt(getString()); // Get input from client.
+	        		
+	        		if (cardno > 99 || cardno < 0) {
+	        			sendmsg("errorcard", "", "");
+	        			return;
+	        		}
+	        		
+	        		if (codes.get(cardno).peekLast() != pass) {
+	        			sendmsg("errorcard", "", "");
+	        			return;
+	        		}
+	        		
+	        		codes.get(cardno).removeLast();
+	        			
+        			sendmsg("welcome", "", "menu");
 	        		// This part is the user interface after the language has been chosen.
-	        		int l = Integer.parseInt(getString()); // Get input from client.
+
 	        		
 	        		// Respond accordingly. This should also be modified later.
-	        		if (l == 1) {
-	        			sendmsg("money", "55", "menu");
-	        		} else if (l == 2) {
-	        			sendmsg("logout", "", "menu");
-	        		} else {
-	        			sendmsg("invalid", "", "menu");
-	        		}
+	        		
 	        	}
 	        }
 	    }
 	}
 
 	public static void main(String[] args) {
-		int portNumber = Integer.parseInt(args[0]);
+		int portNumber = HelperMethods.GetPortFromArgs(args, 0);
 		ServerSocket serverSocket = null;
 		
-		
+		if(portNumber == -1)
+			return;
 		
 		try {
 			serverSocket = new ServerSocket(portNumber);

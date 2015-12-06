@@ -8,7 +8,10 @@ public class ATMClient {
 
 	public static void main(String[] args) {
 		String hostName = args[0];
-		int portNumber = Integer.parseInt(args[1]);
+		int portNumber = HelperMethods.GetPortFromArgs(args, 1);
+		
+		if (portNumber == -1)
+			return;
 		Scanner scan = new Scanner(System.in);
 		
 		ClientInterface ci = new ClientInterface(hostName, portNumber);
