@@ -2,16 +2,22 @@ package NodeMCU;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.HttpURLConnection;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.net.URL;
 
 public class SendRequest {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		System.out.println(excutePost("http://192.168.43.77/on", ""));
+		//System.out.println(excutePost("http://192.168.43.77/on", ""));
+		
+		ReturnRequest("Hello!");
 	}
 	
 	// from http://stackoverflow.com/a/1359700/1275924
@@ -58,5 +64,35 @@ public class SendRequest {
 		    }
 		  }
 		}
+	
+	public static void ReturnRequest (String message) {
 
+		try {
+			ServerSocket ss = new ServerSocket(4711);
+			while(true) {
+				
+				Socket client = ss.accept();
+				
+				BufferedReader bf = new BufferedReader(new InputStreamReader(client.getInputStream()));
+				
+				PrintWriter response = new PrintWriter(client.getOutputStream());
+				
+				response.print("HTTP/1.1 200 \r\n"); 
+				response.print("Content-Type: text/plain\r\n");
+				response.print("Connection: close\r\n");
+				response.print("\r\n");
+				response.print(message);
+				response.print("\r\n");
+				
+		        response.close();
+		        bf.close();
+		        client.close();
+				
+			}
+		
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }
